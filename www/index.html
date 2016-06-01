@@ -1,0 +1,101 @@
+<html>
+<head>
+	<title>Map overlay</title>
+	<style>
+		.frame {
+			position: relative;
+			width: 2877px;
+		}
+		#overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			width: 2877px;
+			height: 100%;
+		}
+		#output {
+			position: fixed;
+			right: 0;
+			top: 0;
+			height: 8em;
+			width: 15em;
+
+			background-color: beige;
+			border-left: 4px solid black;
+			border-bottom: 4px solid black;
+			box-shadow: 4px 4px 4px rgba(0,0,0,0.4);
+
+			padding: 1em;
+		}
+		#display {
+			position: absolute;
+			top: 0;
+		}
+		#log {
+			position: absolute;
+			top: 2em;
+			bottom: 10px;
+			left: 1em;
+			right: 1em;
+			overflow-y: scroll;
+			overflow-x: hidden;
+		}
+	</style>
+	<script> 
+	var app = {};
+	var svgNS = "http://www.w3.org/2000/svg";
+
+	window.onload = function(){
+
+		app.overlay = document.getElementById("overlay");
+		app.map = document.getElementById("map");
+		app.output = document.getElementById("output");
+		app.display = document.getElementById("display");
+		app.log = document.getElementById("log");
+		
+		app.overlay.onmousemove = function(event){
+			Display("X:" + event.clientX + " Y:" + event.clientY);
+		};
+
+		app.overlay.onclick = function(event){
+			CreateStop(event.pageX, event.pageY);
+			Print("circle: " + event.pageX + ":" + event.pageY);
+		};
+	}
+
+	function Display(text) {
+		app.display.innerHTML = text;
+	}
+
+	function Print(text){
+		var line = document.createElement("p");
+		line.innerHTML = text;
+		app.log.appendChild(line);
+	}
+
+	function CreateStop(x,y){
+		var circle = document.createElementNS(svgNS, "circle");
+		circle.setAttributeNS(null, "cx", x);
+		circle.setAttributeNS(null, "cy", y);
+		circle.setAttributeNS(null, "r", "10px");
+		circle.setAttributeNS(null, "fill", "red");
+		circle.setAttributeNS(null, "stroke", "none");
+
+		app.overlay.appendChild(circle);
+	}
+	</script>
+</head>
+<body>
+	<div class="frame">
+		<img id="map" src="img/map.jpg"/>
+		<svg id="overlay">
+		</svg>
+	</div>
+	<div id="output">
+		<p id="display"></p>
+		<div id="log"></div>
+	</div>
+</body>
+</html>
